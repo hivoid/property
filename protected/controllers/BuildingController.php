@@ -33,10 +33,12 @@ class BuildingController extends Controller
 			$model->attributes=$_POST['Building'];
 			empty($model->name) && $model->name = '#'.$model->id;
 			if($model->save())
+			{
+				BasicInfo::model()->updateCounters(array('building_count'=>1), 'id='.Yii::app()->params['infoId']);
 				$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
-		var_dump($model->getErrors());
 		$this->render('create',array(
 			'model'=>$model,
 		));
@@ -50,6 +52,7 @@ class BuildingController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$model->completion_year == 0 && $model->completion_year = '';;
 
 		if(isset($_POST['Building']))
 		{
@@ -71,11 +74,24 @@ class BuildingController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model = $this->loadModel($id);
+		if($model->household_count > 0)
+		{
+			if(!isset($_GET['ajax']))
+			{
+				Yii::app()->user->setMessage('当前单元楼已有住户信息添加，不能再进行删除操作！', 'info');
+				$this->redirect(isset($_GET['returnUrl']) ? $_GET['returnUrl'] : array('view', 'id'=>$model->id));
+			}
+		}
+		else
+		{
+			$model->delete();
+			BasicInfo::model()->updateCounters(array('building_count'=>-1), 'id='.Yii::app()->params['infoId']);
+		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_GET['returnUrl']) ? $_GET['returnUrl'] : array('index'));
 	}
 
 	/**
@@ -84,8 +100,33 @@ class BuildingController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('Building');
+		$datas = $dataProvider->getData();
+		$users = array();
+		if($datas)
+		{
+			$pk = array();
+			foreach ($datas as $data) {
+				if ($data->crt_by && !in_array($data->crt_by, $pk))
+				{
+					$pk[] = $data->crt_by;
+				}
+				if ($data->up_by && !in_array($data->up_by, $pk))
+				{
+					$pk[] = $data->up_by;
+				}
+			}
+			if($pk)
+			{
+				$rows = Manager::model()->findAllByPk($pk);
+				foreach ($rows as $row)
+				{
+					$users[$row->id] = $row;
+				}
+			}
+		}
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			'users'=>$users,
 		));
 	}
 

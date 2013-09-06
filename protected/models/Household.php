@@ -17,7 +17,7 @@
  * @property string $remark
  * @property string $crt_by
  * @property string $crt_time
- * @property string $up_ty
+ * @property string $up_by
  * @property string $up_time
  */
 class Household extends CActiveRecord
@@ -38,10 +38,14 @@ class Household extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('building_id, entrance, floor, number, covered_area, householder, is_rent', 'required'),
-			array('entrance, floor, number, has_gas, size, is_rent', 'numerical', 'integerOnly'=>true),
-			array('covered_area', 'numerical'),
-			array('building_id, householder, crt_by, up_ty', 'length', 'max'=>10),
+			array('building_id, entrance, floor, number, covered_area, householder', 'required'),
+			array('is_rent', 'required', 'message'=>'请选择房屋状态是否出租.'),
+			array('floor, has_gas, size, is_rent', 'numerical', 'integerOnly'=>true),
+			array('floor','checkFloor'),
+			array('number', 'numerical', 'integerOnly'=>true, 'min'=>1, 'max'=>100),
+			array('entrance', 'numerical', 'integerOnly'=>true, 'min'=>1, 'max'=>10),
+			array('covered_area', 'numerical', 'min'=>10, 'max'=>1000),
+			array('building_id, householder, crt_by, up_by', 'length', 'max'=>10),
 			array('remark', 'length', 'max'=>500),
 			array('crt_time, up_time', 'length', 'max'=>20),
 		);
@@ -52,15 +56,30 @@ class Household extends CActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
+			'hder'=>array(self::BELONGS_TO, 'Resident', 'householder'),
+			'building'=>array(self::BELONGS_TO, 'Building', 'building_id'),
+			'creater'=>array(self::BELONGS_TO, 'Manager', 'crt_by'),
+			'updater'=>array(self::BELONGS_TO, 'Manager', 'up_by')
 		);
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
+	public function checkFloor()
+	{
+		$building = Building::model()->findByPk($this->building_id);
+		if(empty($building))
+		{
+			$this->addError('building_id', '所选单元楼不存在.');
+		}
+		else
+		{
+			if ($this->floor > $building->stories)
+			{
+				$this->addError('floor', CHtml::encode("所填楼层超过 {$building->name} 楼层数量 ({$building->stories} 层)"));
+			}
+		}
+	}
+
 	public function attributeLabels()
 	{
 		return array(
@@ -71,13 +90,13 @@ class Household extends CActiveRecord
 			'number' => '房间号',
 			'covered_area' => '建筑面积',
 			'has_gas' => '天燃气',
-			'size' => '居住人数',
+			'size' => '在录人口',
 			'householder' => '户主',
 			'is_rent' => '是否租住',
 			'remark' => '备注',
 			'crt_by' => '添加人',
 			'crt_time' => '添加时间',
-			'up_ty' => '更新人',
+			'up_by' => '更新人',
 			'up_time' => '更新时间',
 		);
 	}

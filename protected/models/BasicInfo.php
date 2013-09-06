@@ -11,16 +11,16 @@
  * @property string $zip
  * @property integer $property_class
  * @property string $developers
- * @property string $building_count
- * @property string $carport_count
- * @property string $household_count
- * @property string $resident_count
+ * @property integer $building_count
+ * @property integer $carport_count
+ * @property integer $household_count
+ * @property integer $resident_count
  */
 class BasicInfo extends CActiveRecord
 {
 	private static $_propertyClasses = array(
-				'1'=>'住宅',
-				'2'=>'商业'
+				'1'=>'普通住宅',
+				'2'=>'公寓'
 			);
 
 	/**

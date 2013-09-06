@@ -28,7 +28,7 @@ class Lookup extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{lookup}}';
+		return 'lookup';
 	}
 
 	/**
@@ -118,11 +118,11 @@ class Lookup extends CActiveRecord
 	 * @param integer the item code (corresponding to the 'code' column value)
 	 * @return string the item name for the specified the code. False is returned if the item type or code does not exist.
 	 */
-	public static function item($type,$code)
+	public static function item($type,$code,$default = false)
 	{
 		if(!isset(self::$_items[$type]))
 			self::loadItems($type);
-		return isset(self::$_items[$type][$code]) ? self::$_items[$type][$code] : false;
+		return isset(self::$_items[$type][$code]) ? self::$_items[$type][$code] : $default;
 	}
 
 	/**

@@ -35,13 +35,11 @@ class Resident extends CActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('household_id, name, sex, rel_with_householder, birthday', 'required'),
 			array('nation, education, status', 'numerical', 'integerOnly'=>true),
-			array('household_id, crt_by, up_by', 'length', 'max'=>10),
-			array('name, rel_with_householder, phone, crt_time, up_time', 'length', 'max'=>20),
+			array('household_id', 'length', 'max'=>10),
+			array('name, rel_with_householder, phone', 'length', 'max'=>20),
 			array('sex', 'length', 'max'=>1),
 			array('id_no', 'length', 'max'=>18),
 		);
@@ -52,9 +50,10 @@ class Resident extends CActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
+			'hh'=>array(self::BELONGS_TO, 'Household', 'household_id'),
+			'creater'=>array(self::BELONGS_TO, 'Manager', 'crt_by'),
+			'updater'=>array(self::BELONGS_TO, 'Manager', 'up_by')
 		);
 	}
 

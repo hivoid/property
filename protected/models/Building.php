@@ -9,7 +9,7 @@
  * @property integer $completion_year
  * @property integer $stories
  * @property string $house_number
- * @property string $household_count
+ * @property integer $household_count
  * @property string $crt_by
  * @property string $crt_time
  * @property string $up_by
@@ -38,6 +38,8 @@ class Building extends CActiveRecord
 			array('completion_year', 'numerical', 'integerOnly'=>true, 'min'=>1970, 'max'=>date('Y')),
 			array('house_number', 'numerical', 'integerOnly'=>true, 'max'=>50000, 'min'=>2),
 			array('name', 'length', 'max'=>20),
+			array('id,name', 'unique'),
+			array('name', 'compare', 'operator'=>'!=', 'compareValue'=>'#')
 		);
 	}
 

@@ -1,16 +1,15 @@
 <?php
-/* @var $this BuildingController */
+/* @var $this HhController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'单元楼',
+	'居民',
 );
 ?>
 
-<h1>单元楼管理</h1>
+<h1>住户</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-	'viewData'=>array('users'=>$users)
+	'itemView'=>'_hhview',
 )); ?>

@@ -706,3 +706,11 @@ CREATE TABLE IF NOT EXISTS `resident` (
   KEY `household_id` (`household_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+ALTER TABLE  `building` ADD UNIQUE (`name`);
+ALTER TABLE  `basic_info` CHANGE  `building_count`  `building_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '建筑楼数量';
+ALTER TABLE  `basic_info` CHANGE  `carport_count`  `carport_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '车位数量',
+CHANGE  `household_count`  `household_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '住户数量',
+CHANGE  `resident_count`  `resident_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '居民数量';
+ALTER TABLE  `building` CHANGE  `household_count`  `household_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '住户数量';
+ALTER TABLE  `resident` CHANGE  `phone`  `phone` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '联系电话';
+ALTER TABLE  `household` CHANGE  `up_ty`  `up_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '更新人';
