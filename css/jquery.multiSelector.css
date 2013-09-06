@@ -1,0 +1,152 @@
+.selector-overlay {
+	position: fixed; 
+	height: 100%;
+	width: 100%;
+	background: #000;
+	background: rgba(0,0,0,.8);
+	z-index: 100;
+	display: none;
+	top: 0;
+	left: 0; 
+}
+.multi-selector {
+	display: block;
+	top: 100px; 
+	left: 50%;
+	margin-left: -300px;
+	background: #eee url(../images/modal-gloss.png) no-repeat -200px -80px;
+	position: absolute;
+	z-index: 101;
+	padding: 20px 30px 30px 30px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	-webkit-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	width: 593px;
+	height: auto;
+	min-height: 46px;
+	font-size: 12px;
+}
+.multi-selector.small  { width: 200px; margin-left: -140px;}
+.multi-selector.medium { width: 400px; margin-left: -240px;}
+.multi-selector.large  { width: 600px; margin-left: -340px;}
+.multi-selector.xlarge { width: 800px; margin-left: -440px;}
+.multi-selector .select-toolbar { height: 5px; }
+.multi-selector #multi-selector-closer {
+	font-size: 22px;
+	line-height: .5;
+	position: absolute;
+	top: 8px;
+	right: 11px;
+	color: #aaa;
+	text-shadow: 0 -1px 1px rbga(0,0,0,.6);
+	font-weight: bold;
+	cursor: pointer;
+}
+.multi-selector ul,
+.multi-selector li,
+.multi-selector div,
+.multi-selector p,
+.multi-selector h3,
+.multi-selector input,
+.multi-selector a {
+	margin: 0;
+	padding: 0;
+}
+.multi-selector ul{
+	float: left;
+}
+.multi-selector .selector-decision{
+	clear:both;
+	text-align: center;
+	height 30px;
+	padding-top:10px;
+}
+.multi-selector .selector-button {
+	width: 90px;
+	height: 25px;
+	background: url("../images/btn-green-coner.png") no-repeat;
+	color: #eb6100;
+	font-weight: bold;
+	border: 0;
+	cursor: pointer;
+}
+#multiSelector {cursor: pointer;}
+
+.multi-selector .select-area {
+	position:relative;
+	overflow:hidden;
+	margin:0 auto;
+	width: auto;
+}
+.multi-selector .select-area ul {
+    height: 245px;
+    overflow: auto;
+    border: 1px solid #d5d5d5;
+    float: left;
+    width: 170px;
+    margin-right: 5px;
+    padding: 2px;
+    color: #333;
+    display: block;
+}
+.multi-selector .selector-result{
+	padding-top:10px;
+	clear:both;
+	overflow:hidden;
+	*zoom:1;
+}
+.multi-selector .selector-result li{
+	float:left;
+	color: #EB6100;
+	margin-left: 3px;
+}
+.multi-selector ul li {
+    background: #fff;
+    border: 1px solid #fff;
+    height: 18px;
+    line-height: 18px;
+    padding: 2px 5px;
+    background: url(../images/mulselector-bg.png) no-repeat scroll -999em -999em;
+    cursor: pointer;	
+	margin-bottom:1px;
+	/*white-space : nowrap;*/
+	overflow:hidden;
+	list-style-type:none;
+}
+.multi-selector ul li input{
+	float:left;
+	margin:2px 3px 2px 0;
+	margin-top:1px\9;
+	*margin:-3px -1px 0 -3px;
+	_margin:-3px -4px 0 -4px;
+	cursor: pointer;
+}
+@-moz-document url-prefix(){
+	.multi-selector ul li input{margin-top:3px;}
+}
+.multi-selector ul li:hover, 
+.multi-selector ul li.hover{
+    background-color: #eee;
+    border-color: #c96;
+    color: #000;
+}
+.multi-selector ul li.selected{
+	background-color:#f3dfcf;
+}
+.multi-selector ul li.spreaded{
+	background-color:#cccccc;
+}
+.multi-selector ul li.have-children {
+    background-position: right 9px;
+}
+.multi-selector .selector-result ul li:hover, 
+.multi-selector .selector-result ul li.hover{
+    background-color: #fff;
+    border-color: #fff;
+    color: #EB6100;
+}
+.multi-selector .selector-result .select-rs-hd {float:left;font-size:12px;margin-right:5px;}
+.multi-selector .selector-result ul {float:left;width:480px;}
