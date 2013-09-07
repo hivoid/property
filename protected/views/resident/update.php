@@ -3,19 +3,12 @@
 /* @var $model Resident */
 
 $this->breadcrumbs=array(
-	'Residents'=>array('index'),
+	'居民'=>array('index'),
 	$model->name=>array('view','id'=>$model->id),
-	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List Resident', 'url'=>array('index')),
-	array('label'=>'Create Resident', 'url'=>array('create')),
-	array('label'=>'View Resident', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Resident', 'url'=>array('admin')),
+	'信息修改',
 );
 ?>
 
-<h1>Update Resident <?php echo $model->id; ?></h1>
+<h1>修改居民信息 <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

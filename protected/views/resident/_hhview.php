@@ -11,6 +11,7 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('size')); ?>:</b>
 	<?php echo CHtml::encode($data->size); ?> 人
+	<a href="<?php echo $this->createUrl('list', array('hid'=>$data->id));?>">查看</a>
 	<br />
 	<b><?php echo CHtml::encode($data->getAttributeLabel('is_rent')); ?>:</b>
 	<?php echo CHtml::encode($data->is_rent == 1 ? '是' : '否'); ?>
@@ -22,6 +23,6 @@
 		|
 		<a href="<?php echo $this->createUrl('hhupdate', array('id'=>$data->id)); ?>">修改</a>
 		|
-		<a href="<?php echo $this->createUrl('add', array('id'=>$data->id)); ?>">添加其他居住人口</a>
+		<a href="<?php echo $this->createUrl('add', array('hid'=>$data->id)); ?>">添加其他居住人口</a>
 	</div>
 </div>

@@ -64,15 +64,24 @@ class ResidentController extends Controller
 		));
 	}
 
-	public function actionAdd()
+	public function actionAdd($hid)
 	{
+		$hmodel = Household::model()->findByPk($hid);
+		if(null == $hmodel)
+		{
+			throw new CHttpException(404, '你在尝试在一个不存在的住户下添加居民！');
+		}
 		$model=new Resident;
-
+		$model->household_id = $hmodel->id;
 		if(isset($_POST['Resident']))
 		{
 			$model->attributes=$_POST['Resident'];
 			if($model->save())
+			{
+				BasicInfo::model()->updateCounters(array('resident_count'=>1), 'id='.Yii::app()->params['infoId']);
+				Household::model()->updateCounters(array('size'=>1), 'id='.$hmodel->id);
 				$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('add',array(
@@ -129,9 +138,51 @@ class ResidentController extends Controller
 
 	public function actionList()
 	{
-		$dataProvider=new CActiveDataProvider('Resident');
+		$buildings = Building::model()->findAll();
+		$hhs = array();
+		$buildingPair = array();
+		foreach ($buildings as $building)
+		{
+			$buildingPair[$building->id] = $building->name;
+		}
+		$criteria = new CDbCriteria();
+		$criteria->with = 'hh.building';
+		$criteria->together = true;
+		if(!empty($_GET['hid']))
+		{
+			$hmodel = Household::model()->findByPk($_GET['hid']);
+			if($hmodel)
+			{
+				$criteria->compare('household_id', $_GET['hid']);
+				$_GET['bid'] = $hmodel->building_id;
+			}
+		}
+		if(!empty($_GET['bid']))
+		{
+			$hms = Household::model()->findAllByAttributes(array('building_id'=>$_GET['bid']), array('order'=>'entrance ASC, floor ASC'));
+			if($hms)
+			{
+				empty($hmodel) && $criteria->compare('hh.building_id', $_GET['bid']);
+				foreach ($hms as $hm) {
+					$hhs[$hm->id] = $hm->entrance . ' 单元 ' . $hm->floor . ' 层 #' . $hm->number;
+				}
+			}
+		}
+		if(!empty($_GET['n']))
+		{
+			$criteria->compare('t.name', $_GET['n'], true);
+		}
+		$dataProvider=new CActiveDataProvider('Resident', array(
+				'criteria'=>$criteria,
+				'pagination'=>array('pageSize'=>'15','pageVar'=>'p'),
+			));
 		$this->render('list',array(
 			'dataProvider'=>$dataProvider,
+			'buildings'=>$buildingPair,
+			'hhs'=>$hhs,
+			'hid'=>empty($_GET['hid']) ? null : $_GET['hid'],
+			'bid'=>empty($_GET['bid']) ? null : $_GET['bid'],
+			'n'=>empty($_GET['n']) ? null : $_GET['n']
 		));
 	}
 
@@ -168,9 +219,28 @@ class ResidentController extends Controller
 		{
 			$this->menu=array(
 					array('label'=>'所有住户', 'url'=>array('index'), 'active'=>$action->id == 'index'),
+					array('label'=>'所有居民', 'url'=>array('list'), 'active'=>$action->id == 'list'),
 					array('label'=>'添加户主', 'url'=>array('create'), 'active'=>$action->id == 'create'),
 			);
 			return true;
 		}
+	}
+
+	public function actionHhoptions()
+	{
+		$bid = Yii::app()->request->getParam('bid');
+		$options = '<option value="">请选择</option>';
+		if($bid)
+		{
+			$hms = Household::model()->findAllByAttributes(array('building_id'=>$bid), array('order'=>'entrance ASC, floor ASC'));
+			if($hms)
+			{
+				foreach ($hms as $hm) {
+					$options .= '<option value="' . $hm->id . '">' .  $hm->entrance . ' 单元 ' . $hm->floor . ' 层 #' . $hm->number . '</option>';
+				}
+			}
+		}
+		echo $options;
+		Yii::app()->end();
 	}
 }

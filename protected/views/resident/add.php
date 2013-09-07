@@ -3,16 +3,11 @@
 /* @var $model Resident */
 
 $this->breadcrumbs=array(
-	'Residents'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List Resident', 'url'=>array('index')),
-	array('label'=>'Manage Resident', 'url'=>array('admin')),
+	'居民'=>array('index'),
+	'添加居民',
 );
 ?>
 
-<h1>Create Resident</h1>
+<h1>添加居民</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

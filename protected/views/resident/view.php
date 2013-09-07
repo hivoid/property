@@ -6,6 +6,7 @@ $this->breadcrumbs=array(
 	'居民'=>array('index'),
 	$model->name,
 );
+$this->menu[] = array('label'=>'修改','url'=>$this->createUrl('update', array('id'=>$model->id)));
 ?>
 
 <h1>查看居民信息 #<?php echo $model->id; ?></h1>
@@ -19,8 +20,8 @@ $this->breadcrumbs=array(
 		'rel_with_householder',
 		'birthday',
 		'id_no'=>array('name'=>'id_no','value'=>empty($model->id_no) ? '未知' : $model->id_no),
-		'nation'=>array('name'=>'nation','value'=>Lookup::item('nation', $model->sex, '未知')),
-		'education'=>array('name'=>'education','value'=>Lookup::item('education', $model->sex, '未知')),
+		'nation'=>array('name'=>'nation','value'=>Lookup::item('nation', $model->nation, '未知')),
+		'education'=>array('name'=>'education','value'=>Lookup::item('education', $model->education, '未知')),
 		'phone'=>array('name'=>'phone','value'=>empty($model->phone) ? '未知' : $model->phone),
 		'crt_time'=>array('value'=>date('Y-m-d H:i:s', $model->crt_time),'name'=>'crt_time', 'visible'=>$model->crt_time != 0),
 		'crt_by'=>array('value'=>$model->crt_by == 0 ? '' : $model->creater->name,'name'=>'crt_by', 'visible'=>$model->crt_by != 0),
