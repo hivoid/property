@@ -1,10 +1,7 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
+CREATE DATABASE `property_management` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `property_management`;
 
 CREATE TABLE IF NOT EXISTS `basic_info` (
   `id` int(10) unsigned NOT NULL DEFAULT '10000' COMMENT 'ID',
@@ -714,3 +711,8 @@ CHANGE  `resident_count`  `resident_count` INT( 10 ) NOT NULL DEFAULT  '0' COMME
 ALTER TABLE  `building` CHANGE  `household_count`  `household_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '住户数量';
 ALTER TABLE  `resident` CHANGE  `phone`  `phone` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '联系电话';
 ALTER TABLE  `household` CHANGE  `up_ty`  `up_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '更新人';
+ALTER TABLE  `household` ADD  `carport_count` TINYINT NOT NULL DEFAULT  '0' COMMENT  '车位数量' AFTER  `size`;
+ALTER TABLE  `payment_record` CHANGE  `waste_collection`  `waste_collection` FLOAT( 9, 2 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '垃圾清理',
+CHANGE  `other`  `other` FLOAT( 9, 2 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '其它费用';
+ALTER TABLE  `payment_record` ADD  `up_by` INT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '更新人' AFTER  `crt_by` ,
+ADD  `up_time` BIGINT NOT NULL DEFAULT  '0' COMMENT  '更新时间' AFTER  `up_by`

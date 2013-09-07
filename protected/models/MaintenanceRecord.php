@@ -50,6 +50,8 @@ class MaintenanceRecord extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+				'creater'=>array(self::BELONGS_TO, 'Manager', 'crt_by'),
+				'updater'=>array(self::BELONGS_TO, 'Manager', 'up_by')
 		);
 	}
 

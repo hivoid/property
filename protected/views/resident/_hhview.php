@@ -24,5 +24,7 @@
 		<a href="<?php echo $this->createUrl('hhupdate', array('id'=>$data->id)); ?>">修改</a>
 		|
 		<a href="<?php echo $this->createUrl('add', array('hid'=>$data->id)); ?>">添加其他居住人口</a>
+		|
+		<a href="<?php echo $this->createUrl('//carport/create', array('hid'=>$data->id)); ?>">添加车位</a>
 	</div>
 </div>

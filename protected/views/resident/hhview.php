@@ -6,8 +6,9 @@ $this->breadcrumbs=array(
 	'居民'=>array('index'),
 	'住户信息',
 );
-
 $this->menu[] = array('label'=>'修改住户信息', 'url'=>array('hhupdate', 'id'=>$model->id));
+$this->menu[] = array('label'=>'添加住户', 'url'=>array('add', 'hid'=>$model->id));
+$this->menu[] = array('label'=>'添加车位', 'url'=>array('//carport/create', 'hid'=>$model->id));
 ?>
 
 <h1>查看住户信息 #<?php echo $model->id; ?></h1>

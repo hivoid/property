@@ -12,6 +12,7 @@
  * @property double $covered_area
  * @property integer $has_gas
  * @property integer $size
+ * @property integer $carport_count
  * @property string $householder
  * @property integer $is_rent
  * @property string $remark
@@ -40,7 +41,7 @@ class Household extends CActiveRecord
 		return array(
 			array('building_id, entrance, floor, number, covered_area, householder', 'required'),
 			array('is_rent', 'required', 'message'=>'请选择房屋状态是否出租.'),
-			array('floor, has_gas, size, is_rent', 'numerical', 'integerOnly'=>true),
+			array('floor, has_gas, size, carport_count, is_rent', 'numerical', 'integerOnly'=>true),
 			array('floor','checkFloor'),
 			array('number', 'numerical', 'integerOnly'=>true, 'min'=>1, 'max'=>100),
 			array('entrance', 'numerical', 'integerOnly'=>true, 'min'=>1, 'max'=>10),
@@ -91,6 +92,7 @@ class Household extends CActiveRecord
 			'covered_area' => '建筑面积',
 			'has_gas' => '天燃气',
 			'size' => '在录人口',
+			'carport_count' => '车位数量',
 			'householder' => '户主',
 			'is_rent' => '是否租住',
 			'remark' => '备注',

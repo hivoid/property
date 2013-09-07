@@ -27,13 +27,11 @@ class Carport extends CActiveRecord
 	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('id, household_id', 'required'),
-			array('id, household_id, crt_by, up_by', 'length', 'max'=>10),
+			array('id', 'unique'),
+			array('id', 'numerical', 'integerOnly'=>true, 'max'=>4294967295, 'min'=>1),
 			array('description', 'length', 'max'=>500),
-			array('crt_time, up_time', 'length', 'max'=>20),
 		);
 	}
 
@@ -42,9 +40,10 @@ class Carport extends CActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
+				'hh'=>array(self::BELONGS_TO, 'Household', 'household_id'),
+				'creater'=>array(self::BELONGS_TO, 'Manager', 'crt_by'),
+				'updater'=>array(self::BELONGS_TO, 'Manager', 'up_by')
 		);
 	}
 

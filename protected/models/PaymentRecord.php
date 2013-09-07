@@ -13,6 +13,8 @@
  * @property double $other
  * @property string $remark
  * @property string $crt_by
+ * @property string $up_by
+ * @property string $up_time
  * @property string $crt_time
  */
 class PaymentRecord extends CActiveRecord
@@ -25,36 +27,25 @@ class PaymentRecord extends CActiveRecord
 		return 'payment_record';
 	}
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
 	public function rules()
 	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
 		return array(
 			array('household_id, date', 'required'),
 			array('public_lighting, heating, waste_collection, other', 'numerical'),
-			array('household_id, crt_by', 'length', 'max'=>10),
+			array('household_id', 'length', 'max'=>10),
 			array('remark', 'length', 'max'=>500),
-			array('crt_time', 'length', 'max'=>20),
 		);
 	}
 
-	/**
-	 * @return array relational rules.
-	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
+			'hh'=>array(self::BELONGS_TO, 'Household', 'household_id'),
+			'creater'=>array(self::BELONGS_TO, 'Manager', 'crt_by'),
+			'updater'=>array(self::BELONGS_TO, 'Manager', 'up_by')
 		);
 	}
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
 	public function attributeLabels()
 	{
 		return array(
@@ -67,16 +58,12 @@ class PaymentRecord extends CActiveRecord
 			'other' => '其它费用',
 			'remark' => '备注说明',
 			'crt_by' => '添加人',
+			'up_by' => '更新人',
+			'up_time' => '更新时间',
 			'crt_time' => '添加时间',
 		);
 	}
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return PaymentRecord the static model class
-	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
