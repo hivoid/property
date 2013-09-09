@@ -81,7 +81,7 @@ class PaymentController extends Controller
 		$this->loadModel($id)->delete();
 
 		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_GET['returnUrl']) ? $_GET['returnUrl'] : array('index'));
 	}
 
 	public function actionIndex()

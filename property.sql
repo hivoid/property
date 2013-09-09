@@ -3,6 +3,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE DATABASE `property_management` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `property_management`;
 
+
 CREATE TABLE IF NOT EXISTS `basic_info` (
   `id` int(10) unsigned NOT NULL DEFAULT '10000' COMMENT 'ID',
   `name` varchar(20) NOT NULL COMMENT '小区名称',
@@ -11,15 +12,13 @@ CREATE TABLE IF NOT EXISTS `basic_info` (
   `zip` varchar(6) NOT NULL DEFAULT '0' COMMENT '邮编',
   `property_class` tinyint(4) NOT NULL COMMENT '建筑类型',
   `developers` varchar(30) NOT NULL DEFAULT '' COMMENT '开发商',
-  `building_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '建筑楼数量',
-  `carport_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '车位数量',
-  `household_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '住户数量',
-  `resident_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '居民数量',
+  `building_count` int(10) NOT NULL DEFAULT '0' COMMENT '建筑楼数量',
+  `carport_count` int(10) NOT NULL DEFAULT '0' COMMENT '车位数量',
+  `household_count` int(10) NOT NULL DEFAULT '0' COMMENT '住户数量',
+  `resident_count` int(10) NOT NULL DEFAULT '0' COMMENT '居民数量',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='基本信息';
 
-INSERT INTO `basic_info` (`id`, `name`, `region`, `address`, `zip`, `property_class`, `developers`, `building_count`, `carport_count`, `household_count`, `resident_count`) VALUES
-(10000, '新城国际', 110105, '朝阳朝外大街6号(朝外大街路口南150米)', '010000', 1, '北京万置房地产开发有限公司', 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `building` (
   `id` int(10) unsigned NOT NULL COMMENT '楼号',
@@ -27,16 +26,15 @@ CREATE TABLE IF NOT EXISTS `building` (
   `completion_year` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '建筑年份',
   `stories` smallint(5) unsigned NOT NULL COMMENT '楼层数量',
   `house_number` int(10) unsigned NOT NULL COMMENT '住房总数量',
-  `household_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '住户数量',
+  `household_count` int(10) NOT NULL DEFAULT '0' COMMENT '住户数量',
   `crt_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加人',
   `crt_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `up_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新人',
   `up_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='单元楼';
 
-INSERT INTO `building` (`id`, `name`, `completion_year`, `stories`, `house_number`, `household_count`, `crt_by`, `crt_time`, `up_by`, `up_time`) VALUES
-(1, '#1', 0, 20, 80, 0, 1, 1378288691, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `carport` (
   `id` int(10) unsigned NOT NULL COMMENT '编号',
@@ -59,12 +57,13 @@ CREATE TABLE IF NOT EXISTS `household` (
   `covered_area` float(9,2) unsigned NOT NULL COMMENT '建筑面积',
   `has_gas` tinyint(4) NOT NULL DEFAULT '0' COMMENT '天燃气',
   `size` tinyint(4) NOT NULL DEFAULT '0' COMMENT '居住人数',
+  `carport_count` tinyint(4) NOT NULL DEFAULT '0' COMMENT '车位数量',
   `householder` int(10) unsigned NOT NULL COMMENT '户主',
   `is_rent` tinyint(4) NOT NULL COMMENT '是否租住',
   `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注',
   `crt_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加人',
   `crt_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '添加时间',
-  `up_ty` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新人',
+  `up_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新人',
   `up_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `building_id` (`building_id`),
@@ -183,11 +182,10 @@ CREATE TABLE IF NOT EXISTS `manager` (
   `up_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新人',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='管理员' AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='管理员' AUTO_INCREMENT=2 ;
 
 INSERT INTO `manager` (`id`, `username`, `password`, `salt`, `name`, `is_super`, `login_count`, `last_login`, `status`, `crt_time`, `crt_by`, `up_time`, `up_by`) VALUES
-(1, 'wgs', 'be5360fab6a9562ab9f29be961e5041b', 'wu', '系统管理员', 1, 9, 1378275804, 1, 0, 0, 0, 0),
-(2, 'hamo', 'dc1192bfdbded0b3319cab18bd7e2b53', 'c1d52e2d1da666e6d91a7950d218bb7a', '汉默', 0, 3, 1378284568, 1, 1378280261, 1, 0, 0);
+(1, 'wgs', 'be5360fab6a9562ab9f29be961e5041b', 'wu', '系统管理员', 1, 9, 1378275804, 1, 0, 0, 0, 0);
 
 CREATE TABLE IF NOT EXISTS `payment_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -195,10 +193,12 @@ CREATE TABLE IF NOT EXISTS `payment_record` (
   `date` date NOT NULL COMMENT '缴费日期',
   `public_lighting` float(9,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '照明',
   `heating` float(9,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '取暖',
-  `waste_collection` float unsigned NOT NULL DEFAULT '0' COMMENT '垃圾清理',
-  `other` float unsigned NOT NULL DEFAULT '0' COMMENT '其它费用',
+  `waste_collection` float(9,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '垃圾清理',
+  `other` float(9,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '其它费用',
   `remark` varchar(500) NOT NULL DEFAULT '' COMMENT '备注说明',
   `crt_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加人',
+  `up_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新人',
+  `up_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '更新时间',
   `crt_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '添加时间',
   PRIMARY KEY (`id`),
   KEY `household_id` (`household_id`)
@@ -693,7 +693,7 @@ CREATE TABLE IF NOT EXISTS `resident` (
   `id_no` varchar(18) NOT NULL DEFAULT '' COMMENT '身份证号',
   `nation` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '民族',
   `education` tinyint(4) NOT NULL DEFAULT '0' COMMENT '教育程度',
-  `phone` varchar(20) NOT NULL DEFAULT '0' COMMENT '联系电话',
+  `phone` varchar(20) NOT NULL COMMENT '联系电话',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态',
   `crt_by` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加人',
   `crt_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '添加时间',
@@ -703,16 +703,3 @@ CREATE TABLE IF NOT EXISTS `resident` (
   KEY `household_id` (`household_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-ALTER TABLE  `building` ADD UNIQUE (`name`);
-ALTER TABLE  `basic_info` CHANGE  `building_count`  `building_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '建筑楼数量';
-ALTER TABLE  `basic_info` CHANGE  `carport_count`  `carport_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '车位数量',
-CHANGE  `household_count`  `household_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '住户数量',
-CHANGE  `resident_count`  `resident_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '居民数量';
-ALTER TABLE  `building` CHANGE  `household_count`  `household_count` INT( 10 ) NOT NULL DEFAULT  '0' COMMENT  '住户数量';
-ALTER TABLE  `resident` CHANGE  `phone`  `phone` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '联系电话';
-ALTER TABLE  `household` CHANGE  `up_ty`  `up_by` INT( 10 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '更新人';
-ALTER TABLE  `household` ADD  `carport_count` TINYINT NOT NULL DEFAULT  '0' COMMENT  '车位数量' AFTER  `size`;
-ALTER TABLE  `payment_record` CHANGE  `waste_collection`  `waste_collection` FLOAT( 9, 2 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '垃圾清理',
-CHANGE  `other`  `other` FLOAT( 9, 2 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '其它费用';
-ALTER TABLE  `payment_record` ADD  `up_by` INT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '更新人' AFTER  `crt_by` ,
-ADD  `up_time` BIGINT NOT NULL DEFAULT  '0' COMMENT  '更新时间' AFTER  `up_by`

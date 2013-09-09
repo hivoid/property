@@ -6,6 +6,9 @@ $this->breadcrumbs=array(
 	'缴费'=>array('index'),
 	'查看',
 );
+
+$this->menu[] = array('label'=>'修改', 'url'=>array('update', 'id'=>$model->id));
+$this->menu[] = array('label'=>'删除', 'url'=>array('delete', 'id'=>$model->id),'linkOptions'=>array('onclick'=>'javascript:return confirm("删除操作不可恢复，是否继续执行?");'));
 ?>
 
 <h1>查看缴费详细 #<?php echo $model->id; ?></h1>

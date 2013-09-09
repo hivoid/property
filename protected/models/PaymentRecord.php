@@ -31,12 +31,19 @@ class PaymentRecord extends CActiveRecord
 	{
 		return array(
 			array('household_id, date', 'required'),
-			array('public_lighting, heating, waste_collection, other', 'numerical'),
+			array('public_lighting, heating, waste_collection, other', 'numerical', 'min'=>0),
+			array('public_lighting, heating, waste_collection, other', 'checkTotal'),
 			array('household_id', 'length', 'max'=>10),
 			array('remark', 'length', 'max'=>500),
 		);
 	}
 
+	public function  checkTotal($attribute, $params)
+	{
+		$total = $this->public_lighting + $this->heating + $this->waste_collection + $this->other;
+		if($total <= 0)
+			$this->addError($attribute, '您至少需要填写一项缴费金额.');
+	}
 	public function relations()
 	{
 		return array(
