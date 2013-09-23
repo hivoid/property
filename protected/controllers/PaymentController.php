@@ -4,6 +4,22 @@ class PaymentController extends Controller
 {
 	public $layout='//layouts/column2';
 
+	public $costs = array(
+				'public_lighting'  => '照明费',
+				'heating'          => '取暖费',
+				'waste_collection' => '垃圾清理费',
+				'property_costs'   => '物业费',
+				'catv_costs'       => '有线电视费',
+				'other'            => '其它费用'
+			);
+	public $sdays = array(
+			1  => '今天',
+			3  => '三天内',
+			7  => '一周内',
+			30 => '一个月内',
+			90 => '三个月内',
+	);
+
 	public function actionView($id)
 	{
 		$this->render('view',array(
@@ -84,12 +100,92 @@ class PaymentController extends Controller
 			$this->redirect(isset($_GET['returnUrl']) ? $_GET['returnUrl'] : array('index'));
 	}
 
-	public function actionIndex()
+	public function actionIndex($dt = null, $s = null)
 	{
-		$dataProvider=new CActiveDataProvider('PaymentRecord');
+		$criteria = new CDbCriteria();
+		if(isset($dt) && '' !== $dt)
+		{
+			$date = intval($dt);
+			if(array_key_exists($date, $this->sdays))
+			{
+				if($date == 30)
+				{
+					$critical = strtotime("-1 months", strtotime('tomorrow'));
+					$cdate = date('Y-m-d', $critical);
+					$criteria->compare('date', ">= {$cdate}");
+				}
+				elseif ($date == 90)
+				{
+					$critical = strtotime("-3 months", strtotime('tomorrow'));
+					$cdate = date('Y-m-d', $critical);
+					$criteria->compare('date', ">= {$cdate}");
+				}
+				else
+				{
+					$critical = strtotime("-{$date} Days", strtotime('tomorrow'));
+					$cdate = date('Y-m-d', $critical);
+					$criteria->compare('date', ">= {$cdate}");
+				}
+			}
+		}
+		if(isset($s) && '' !== $s)
+		{
+			if(array_key_exists($s, $this->costs))
+			{
+				$sub = $s;
+				$criteria->compare($sub, "> 0");
+			}
+		}
+		$dataProvider=new CActiveDataProvider('PaymentRecord', array('criteria'=>$criteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			's'=>isset($sub) ? $sub : null,
+			'dt'=>isset($date) ? $date : null
 		));
+	}
+
+	public function actionParr()
+	{
+		$criteria = new CDbCriteria();
+		$critical = strtotime("-1 months", strtotime('tomorrow'));
+		$cdate = date('Y-m-d', $critical);
+		$criteria->compare('date', ">= {$cdate}");
+		$criteria->compare('property_costs', "> 0");
+		$criteria->group = 'household_id';
+		$criteria->select = 'household_id';
+		$models = PaymentRecord::model()->findAll($criteria);
+		$hcriteria = new CDbCriteria();
+		if($models)
+		{
+			$pk = array();
+			foreach ($models as $model) {
+				$pk[] = $model->household_id;
+			}
+			$hcriteria->addNotInCondition('id', $pk);
+		}
+		$hcriteria->with = 'building';
+		$hcriteria->together = true;
+		$dataProvider=new CActiveDataProvider('Household', array('criteria'=>$hcriteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
+		$this->render('punpaid',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+	public function actionPhistory($hid)
+	{
+		$model = Household::model()->findByPk($hid);
+		if($model)
+		{
+			$criteria = new CDbCriteria();
+			$criteria->compare('household_id', $hid);
+			$criteria->compare('property_costs', "> 0");
+			$criteria->order = 't.date DESC';
+			$dataProvider=new CActiveDataProvider('PaymentRecord', array('criteria'=>$criteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
+			$this->render('phistory',array(
+				'dataProvider'=>$dataProvider,
+				'model'=>$model
+			));
+		}
 	}
 
 	public function loadModel($id)

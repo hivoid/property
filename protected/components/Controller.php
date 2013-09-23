@@ -14,8 +14,14 @@ class Controller extends CController
 		if(parent::beforeAction($action))
 		{
 			$this->raisePrompt();
-			if(Yii::app()->user->isGuest && !($this->id == 'manage' && $action->id == 'login'))
+			if(Yii::app()->user->isGuest && !($this->id == 'manage' && ($action->id == 'login' || $action->id == 'error')))
+			{
 				Yii::app()->user->loginRequired();
+			}
+			if(!Yii::app()->user->isGuest && ($this->id == 'manage' && $action->id == 'login'))
+			{
+				$this->redirect(array('//manage'));
+			}
 			// 是否已经填写小区信息
 			$infoFilled = BasicInfo::model()->exists('id=' . Yii::app()->params['infoId']);
 			// 需要完善小区基本信息后才能进行正常管理

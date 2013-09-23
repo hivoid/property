@@ -42,6 +42,18 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'property_costs'); ?>
+		<?php echo $form->textField($model,'property_costs'); ?>
+		<?php echo $form->error($model,'property_costs'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'catv_costs'); ?>
+		<?php echo $form->textField($model,'catv_costs'); ?>
+		<?php echo $form->error($model,'catv_costs'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'other'); ?>
 		<?php echo $form->textField($model,'other'); ?>
 		<?php echo $form->error($model,'other'); ?>

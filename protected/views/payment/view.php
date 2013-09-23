@@ -21,6 +21,8 @@ $this->menu[] = array('label'=>'删除', 'url'=>array('delete', 'id'=>$model->id
 		'public_lighting',
 		'heating',
 		'waste_collection',
+		'property_costs',
+		'catv_costs',
 		'other',
 		'remark',
 		'crt_time'=>array('value'=>date('Y-m-d H:i:s', $model->crt_time),'name'=>'crt_time', 'visible'=>$model->crt_time != 0),

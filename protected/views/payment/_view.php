@@ -22,6 +22,16 @@
 	<?php echo CHtml::encode($data->waste_collection); ?>
 	&nbsp; &nbsp;
 <?php endif;?>
+<?php if($data->property_costs > 0):?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('property_costs')); ?>:</b>
+	<?php echo CHtml::encode($data->property_costs); ?>
+	&nbsp; &nbsp;
+<?php endif;?>
+<?php if($data->catv_costs > 0):?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('catv_costs')); ?>:</b>
+	<?php echo CHtml::encode($data->catv_costs); ?>
+	&nbsp; &nbsp;
+<?php endif;?>
 <?php if($data->other > 0):?>
 	<b><?php echo CHtml::encode($data->getAttributeLabel('other')); ?>:</b>
 	<?php echo CHtml::encode($data->other); ?>

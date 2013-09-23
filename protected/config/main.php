@@ -39,7 +39,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=property_management',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'techcentos',
 			'charset' => 'utf8',
 		),
 		'errorHandler'=>array(
