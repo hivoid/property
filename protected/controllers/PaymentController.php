@@ -161,12 +161,39 @@ class PaymentController extends Controller
 			foreach ($models as $model) {
 				$pk[] = $model->household_id;
 			}
-			$hcriteria->addNotInCondition('id', $pk);
+			$hcriteria->addNotInCondition('t.id', $pk);
 		}
 		$hcriteria->with = 'building';
 		$hcriteria->together = true;
 		$dataProvider=new CActiveDataProvider('Household', array('criteria'=>$hcriteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
 		$this->render('punpaid',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+	public function actionCarr()
+	{
+		$criteria = new CDbCriteria();
+		$critical = strtotime("-1 months", strtotime('tomorrow'));
+		$cdate = date('Y-m-d', $critical);
+		$criteria->compare('date', ">= {$cdate}");
+		$criteria->compare('catv_costs', "> 0");
+		$criteria->group = 'household_id';
+		$criteria->select = 'household_id';
+		$models = PaymentRecord::model()->findAll($criteria);
+		$hcriteria = new CDbCriteria();
+		if($models)
+		{
+			$pk = array();
+			foreach ($models as $model) {
+				$pk[] = $model->household_id;
+			}
+			$hcriteria->addNotInCondition('t.id', $pk);
+		}
+		$hcriteria->with = 'building';
+		$hcriteria->together = true;
+		$dataProvider=new CActiveDataProvider('Household', array('criteria'=>$hcriteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
+		$this->render('cunpaid',array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
@@ -182,6 +209,23 @@ class PaymentController extends Controller
 			$criteria->order = 't.date DESC';
 			$dataProvider=new CActiveDataProvider('PaymentRecord', array('criteria'=>$criteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
 			$this->render('phistory',array(
+				'dataProvider'=>$dataProvider,
+				'model'=>$model
+			));
+		}
+	}
+
+	public function actionChistory($hid)
+	{
+		$model = Household::model()->findByPk($hid);
+		if($model)
+		{
+			$criteria = new CDbCriteria();
+			$criteria->compare('household_id', $hid);
+			$criteria->compare('catv_costs', "> 0");
+			$criteria->order = 't.date DESC';
+			$dataProvider=new CActiveDataProvider('PaymentRecord', array('criteria'=>$criteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
+			$this->render('chistory',array(
 				'dataProvider'=>$dataProvider,
 				'model'=>$model
 			));
