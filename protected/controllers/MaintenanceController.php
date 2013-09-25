@@ -83,11 +83,22 @@ class MaintenanceController extends Controller
 	/**
 	 * Lists all models.
 	 */
-	public function actionIndex()
+	public function actionIndex($u = null, $dt = null)
 	{
-		$dataProvider=new CActiveDataProvider('MaintenanceRecord');
+		$criteria = new CDbCriteria();
+		if(isset($dt) && '' !== $dt)
+		{
+			$criteria->compare('date', $dt);
+		}
+		if(isset($u) && '' !== $u)
+		{
+			$criteria->compare('technician', $u, true);
+		}
+		$dataProvider=new CActiveDataProvider('MaintenanceRecord', array('criteria'=>$criteria,'pagination'=>array('pageSize'=>10, 'pageVar'=>'p')));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			'u'=>$u,
+			'dt'=>$dt
 		));
 	}
 
