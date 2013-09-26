@@ -67,7 +67,7 @@ class Resident extends CActiveRecord
 			'household_id' => '住户',
 			'name' => '姓名',
 			'sex' => '性别',
-			'rel_with_householder' => '与户主关系',
+			'rel_with_householder' => '与房主关系',
 			'birthday' => '出生日期',
 			'id_no' => '身份证号',
 			'nation' => '民族',

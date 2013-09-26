@@ -14,7 +14,7 @@
 	<div class="row">
 		<b><?php echo $model->hh->building->name . ' ' . $model->hh->entrance . ' 单元 ' . $model->hh->floor . ' 层 #' . $model->hh->number;?></b>
 <?php if ($model->hh->householder == $model->id):?>
-		&nbsp; <span style="font-weight:bold;color:#925;">[户主]</span>
+		&nbsp; <span style="font-weight:bold;color:#925;">[房主]</span>
 <?php endif;?>
 	</div>
 

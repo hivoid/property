@@ -19,7 +19,7 @@
 	<div style="padding: 5px;">
 		<a href="<?php echo $this->createUrl('hhview', array('id'=>$data->id)); ?>">查看详细</a>
 		|
-		<a href="<?php echo $this->createUrl('view', array('id'=>$data->householder)); ?>">查看户主信息</a>
+		<a href="<?php echo $this->createUrl('view', array('id'=>$data->householder)); ?>">查看房主信息</a>
 		|
 		<a href="<?php echo $this->createUrl('hhupdate', array('id'=>$data->id)); ?>">修改</a>
 		|

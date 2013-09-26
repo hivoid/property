@@ -220,7 +220,7 @@ class ResidentController extends Controller
 			$this->menu=array(
 					array('label'=>'所有住户', 'url'=>array('index'), 'active'=>$action->id == 'index'),
 					array('label'=>'所有居民', 'url'=>array('list'), 'active'=>$action->id == 'list'),
-					array('label'=>'添加户主', 'url'=>array('create'), 'active'=>$action->id == 'create'),
+					array('label'=>'添加房主', 'url'=>array('create'), 'active'=>$action->id == 'create'),
 			);
 			return true;
 		}

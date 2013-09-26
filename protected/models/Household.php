@@ -93,7 +93,7 @@ class Household extends CActiveRecord
 			'has_gas' => '天燃气',
 			'size' => '在录人口',
 			'carport_count' => '车位数量',
-			'householder' => '户主',
+			'householder' => '房主',
 			'is_rent' => '是否租住',
 			'remark' => '备注',
 			'crt_by' => '添加人',

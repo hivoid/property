@@ -63,7 +63,7 @@
 	<hr />
 
 	<div class="row">
-		<strong>户主信息 (主要联系人):</strong>
+		<strong>房主信息 (主要联系人):</strong>
 	</div>
 	<br />
 
